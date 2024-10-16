@@ -1,0 +1,23 @@
+[
+  {
+    "ContainingType": "fakeface_be.Controllers.AuthenticationController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/authentication",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[fakeface_be.Models.User.UserModel, fakeface_be, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetUserIds"
+  }
+]

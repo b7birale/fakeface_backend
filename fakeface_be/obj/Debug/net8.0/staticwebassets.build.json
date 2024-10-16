@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "BfFHdHs9xzrPiNopdGP2GDtzG1FbORlbKoagthzKUgY=",
+  "Source": "fakeface_be",
+  "BasePath": "_content/fakeface_be",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

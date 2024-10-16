@@ -1,0 +1,6 @@
+@fakeface_be_HostAddress = http://localhost:5002
+
+GET {{fakeface_be_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
