@@ -6,5 +6,13 @@ namespace fakeface_be.Services.User
     {
         Task<List<UserModel>> GetAllUsers();
 
+        Task<UserModel> GetUserById(int user_id);
+
+        Task<bool> SignUp(UserModel user);
+
+        Task<UserModel> Login(string email);
+
+        Task<string> HashPassword(string password);
+
     }
 }
