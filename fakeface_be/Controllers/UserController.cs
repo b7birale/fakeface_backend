@@ -17,15 +17,18 @@ namespace fakeface_be.Controllers
             this.userRepository = userRepository;
         }
 
-
+        /*
         [HttpPost(Name = "SignUp")]
         public async Task<ActionResult<bool>> SignUp(UserModel user)
         {
             var date = user.BirthDate.ToString("yyyy-MM-dd");
             
-            user.BirthDate = DateOnly.Parse(date);
+            
+            user.BirthDate = DateTime.Parse(date);
             var result = await userRepository.SignUp(user);
             return Ok(result);
-        }
+            
+         }
+        */
     }
 }

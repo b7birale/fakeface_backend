@@ -2,7 +2,7 @@
 
 namespace fakeface_be.Models.User
 {
-    public class UserModel : IdentityUser
+    public class UserModel
     {
         public string Email { get; set; }
         public string Password { get; set; }

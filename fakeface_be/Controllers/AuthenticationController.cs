@@ -38,7 +38,7 @@ namespace fakeface_be.Controllers
         public async Task<ActionResult<string>> AuthenticateAsync(LoginUserModel authenticationRequestBody)
         {
             
-            var userFromDb = await _userRepository.Login(authenticationRequestBody.Email);
+            var userFromDb = await _userRepository.Login(authenticationRequestBody.Email); //!!!
             var userHashedPassword = await _userRepository.HashPassword($"{authenticationRequestBody.Password}{userFromDb.Salt}");
 
             if (userFromDb.Password != userHashedPassword)
@@ -51,11 +51,11 @@ namespace fakeface_be.Controllers
 
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claimsForToken = new List<Claim>();
-            //claimsForToken.Add(new Claim("Id", userFromDb.UserId.ToString()));
-            claimsForToken.Add(new Claim("Email", "test@gmail.com")); //userFromDb.Email.ToString()
-            claimsForToken.Add(new Claim("Firstname", "Elek"));
-            claimsForToken.Add(new Claim("Lastname", "Teszt"));
-            claimsForToken.Add(new Claim("Birthdate", "1999-01-01"));
+            claimsForToken.Add(new Claim("Id", userFromDb.UserId.ToString()));
+            claimsForToken.Add(new Claim("Email", authenticationRequestBody.Email)); //userFromDb.Email.ToString()
+            claimsForToken.Add(new Claim("Firstname", userFromDb.Firstname));
+            claimsForToken.Add(new Claim("Lastname", userFromDb.Lastname));
+            claimsForToken.Add(new Claim("Birthdate", userFromDb.BirthDate.ToString()));
             //firstname, lastname, stb
             //amit belerakok a claimbe azt fogjuk tudni frontenden használni => PASSWORDOT TILOS BELERAKNI pont ezért
 
@@ -75,6 +75,27 @@ namespace fakeface_be.Controllers
 
             return Ok(new { token = tokenToReturn });
         }
+
+
+        [HttpPost("SignUp")]
+        //[AllowAnonymous]
+        public async Task<ActionResult<bool>> SignUp(UserModel authenticationRequestBody)
+        {
+
+            var userFromDb = await _userRepository.SignUp(authenticationRequestBody);
+
+
+            return Ok(userFromDb);
+        }
+
+
+
+
+
     }
 
 }
+
+
+
+

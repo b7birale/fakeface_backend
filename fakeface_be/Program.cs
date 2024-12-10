@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using fakeface_be.Models.User;
+using fakeface_be.Services.Post;
+using fakeface_be.Services.Friend;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,8 @@ var configuration = builder.Configuration;
 // Add services
 //builder.Services.AddSingleton(new DatabaseService(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+//builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 
 
 // Add services to the container.
@@ -41,13 +45,17 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
     opt.TokenLifespan = TimeSpan.FromMinutes(30);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("default", policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins("http://localhost:4200");
+    });
 
-builder.Services.AddIdentity<UserModel, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-
-
+});
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -79,6 +87,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("default");
 
 app.UseHttpsRedirection();
 
