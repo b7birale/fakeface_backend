@@ -19,7 +19,11 @@ var configuration = builder.Configuration;
 //builder.Services.AddSingleton(new DatabaseService(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
-//builder.Services.AddScoped<IFriendRepository, FriendRepository>();
+builder.Services.AddScoped<IFriendRepository, FriendRepository>();
+//builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
+//builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+//builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
 
 
 // Add services to the container.

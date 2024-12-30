@@ -6,5 +6,10 @@ namespace fakeface_be.Services.Post
     {
         Task<List<PostModel>> GetPostsByUserId(int user_id);
 
+        Task<List<PostModel>> GetPostsByUserIds(string userIds);
+
+        Task<bool> CreatePost(string picture, string content, int user_id);
+
+        Task<bool> DeletePost(int post_id);
     }
 }

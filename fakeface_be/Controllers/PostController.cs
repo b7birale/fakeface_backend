@@ -27,12 +27,13 @@ namespace fakeface_be.Controllers
 
         [HttpGet("GetPosts")]
         [Authorize]
-        public async Task<ActionResult<List<PostModel>>> GetPostsByUserIds([FromQuery] string userId)
+        public async Task<ActionResult<List<PostModel>>> GetPostsByUserIds([FromQuery] string userIds)
         {
-            int.TryParse(userId, out int id);
-            var result = await this._postRepository.GetPostsByUserId(id);
+            var result = await this._postRepository.GetPostsByUserIds(userIds);
             return Ok(result);
             
         }
+
+
     }
 }
