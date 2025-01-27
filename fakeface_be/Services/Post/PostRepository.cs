@@ -32,7 +32,7 @@ namespace fakeface_be.Services.Post
                         while (reader.Read())
                         {
                             PostModel p = new PostModel();
-                            p.PostId = (int)reader["post_id"];
+                            p.post_id = (int)reader["post_id"];
                             p.Content = (string)reader["content"];
                             result.Add(p);
                             //Console.WriteLine($"{reader["user_id"]}, {reader["email"]}, {reader["first_name"]}");
@@ -51,9 +51,9 @@ namespace fakeface_be.Services.Post
             return result;
         }
 
-        public async Task<List<PostModel>> GetPostsByUserIds(string userIds)
+        public async Task<List<PostFeedModel>> GetPostsByUserIds(string userIds)
         {
-            var result = new List<PostModel>();
+            var result = new List<PostFeedModel>();
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
@@ -68,9 +68,14 @@ namespace fakeface_be.Services.Post
                     {
                         while (reader.Read())
                         {
-                            PostModel p = new PostModel();
+                            PostFeedModel p = new PostFeedModel();
                             p.PostId = (int)reader["post_id"];
                             p.Content = (string)reader["content"];
+                            p.Title = (string)reader["title"];
+                            p.Firstname = (string)reader["first_name"];
+                            p.Lastname = (string)reader["last_name"];
+                            p.Date = (DateTime)reader["date"];
+                            p.Picture = (string)reader["picture"];
                             result.Add(p);
                             //Console.WriteLine($"{reader["user_id"]}, {reader["email"]}, {reader["first_name"]}");
                         }
@@ -88,7 +93,7 @@ namespace fakeface_be.Services.Post
             return result;
         }
 
-        public async Task<bool> CreatePost(string picture, string content, int user_id)
+        public async Task<bool> CreatePost(PostModel post)
         {
             bool result = false;
             try
@@ -99,9 +104,10 @@ namespace fakeface_be.Services.Post
 
                     MySqlCommand cmd = new MySqlCommand("CreatePost", connection); // tárolt eljárás neve
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_picture", picture); // param1 === adatbázisban lévő unpit név
-                    cmd.Parameters.AddWithValue("@p_content", content);
-                    cmd.Parameters.AddWithValue("@p_user_id", user_id);
+                    cmd.Parameters.AddWithValue("@p_picture", post.Picture); // param1 === adatbázisban lévő unpit név
+                    cmd.Parameters.AddWithValue("@p_content", post.Content);
+                    cmd.Parameters.AddWithValue("@p_user_id", post.user_id);
+                    cmd.Parameters.AddWithValue("@p_title", post.Title);
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {

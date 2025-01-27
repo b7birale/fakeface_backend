@@ -35,5 +35,15 @@ namespace fakeface_be.Controllers
         }
 
 
+        [HttpPost("InsertPost")]
+        [Authorize]
+        public async Task<ActionResult<bool>> CreatePost([FromBody] PostModel post)
+        {
+            var result = await this._postRepository.CreatePost(post);
+            return Ok(result);
+
+        }
+
+
     }
 }

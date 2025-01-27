@@ -25,6 +25,11 @@ builder.Services.AddScoped<IFriendRepository, FriendRepository>();
 //builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestHeadersTotalSize = 65536;
+    options.Limits.MaxRequestLineSize = 8192;
+});
 
 // Add services to the container.
 

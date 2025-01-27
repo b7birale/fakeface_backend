@@ -2,11 +2,12 @@
 {
     public class PostModel
     {
-        public int PostId { get; set; }
-        public int UsertId { get; set; }
+        public int post_id { get; set; }
+        public int user_id { get; set; }
         public string? Picture {  get; set; }
 
         public string Content { get; set; }
         public DateTime Date { get; set; }
+        public string Title { get; set; }
     }
 }
