@@ -50,7 +50,7 @@ namespace fakeface_be.Services.Message
             return result;
         }
 
-        public async Task<bool> SendMessage(int chatroom_id)
+        public async Task<bool> SendMessage(int chatroom_id, string content)
         {
             bool result = false;
             try
@@ -62,6 +62,7 @@ namespace fakeface_be.Services.Message
                     MySqlCommand cmd = new MySqlCommand("SendMessage", connection); // tárolt eljárás neve
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@p_room_id", chatroom_id); // param1 === adatbázisban lévő unpit név
+                    cmd.Parameters.AddWithValue("@p_content", content);
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {

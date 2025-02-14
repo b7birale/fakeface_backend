@@ -10,6 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using fakeface_be.Models.User;
 using fakeface_be.Services.Post;
 using fakeface_be.Services.Friend;
+using fakeface_be.Services.Chatroom;
+using fakeface_be.Services.Message;
+using fakeface_be.Services.Comment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,9 +23,9 @@ var configuration = builder.Configuration;
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IFriendRepository, FriendRepository>();
-//builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
-//builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-//builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 
 builder.WebHost.ConfigureKestrel(options =>
