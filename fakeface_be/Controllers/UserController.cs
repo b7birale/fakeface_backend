@@ -17,18 +17,23 @@ namespace fakeface_be.Controllers
             this.userRepository = userRepository;
         }
 
-        /*
-        [HttpPost(Name = "SignUp")]
-        public async Task<ActionResult<bool>> SignUp(UserModel user)
+        
+        [HttpGet("GetUserToProfile")]
+        public async Task<ActionResult<UserModel>> GetUserToProfile([FromQuery] string user_id)
         {
-            var date = user.BirthDate.ToString("yyyy-MM-dd");
-            
-            
-            user.BirthDate = DateTime.Parse(date);
-            var result = await userRepository.SignUp(user);
+            int.TryParse(user_id, out int userId);
+            var result = await userRepository.GetUserToProfile(userId);
             return Ok(result);
             
-         }
-        */
+        }
+
+        [HttpPost("ModifyUserData")]
+        public async Task<ActionResult<UpdateUserModel>> ModifyUserData([FromBody] UpdateUserModel user)
+        {
+            var result = await userRepository.ModifyUserData(user);
+            return Ok(result);
+
+        }
+
     }
 }

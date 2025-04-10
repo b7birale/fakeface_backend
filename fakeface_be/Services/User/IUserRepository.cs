@@ -4,9 +4,12 @@ namespace fakeface_be.Services.User
 {
     public interface IUserRepository
     {
-        Task<List<UserModel>> GetAllUsers();
+        Task<List<UserPersonModel>> GetAllUsers(int user_id);
 
         Task<UserModel> GetUserById(int user_id);
+
+        Task<UserModel> GetUserToProfile(int user_id);
+        Task<bool> ModifyUserData(UpdateUserModel user);
 
         Task<bool> SignUp(UserModel user);
 

@@ -1,5 +1,6 @@
 ﻿using fakeface_be.Models.Post;
 using fakeface_be.Models.User;
+using FakeFace_BE.DbContext;
 using Microsoft.AspNetCore.Identity;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -57,6 +58,109 @@ namespace fakeface_be.Services.User
             return result;
         }
 
+        public async Task<UserModel> GetUserToProfile(int user_id)
+        {
+            var result = new UserModel();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("GetUserToProfile", connection); // tárolt eljárás neve
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@user_id", user_id); // param1 === adatbázisban lévő unpit név
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            result.UserId = (int)reader["user_id"];
+                            result.Email = (string)reader["email"];
+                            result.Lastname = (string)reader["last_name"];
+                            result.Firstname = (string)reader["first_name"];
+                            result.ProfilePicture = reader.IsDBNull("profile_picture") ? "" : (string)reader["profile_picture"];
+                            var date = (DateTime)reader["birthdate"];
+                            result.BirthDate = DateOnly.FromDateTime(date);
+
+                            //birthdate, profile_picture
+                            // oszlopok
+                            //Console.WriteLine($"{reader["user_id"]}, {reader["email"]}, {reader["first_name"]}");
+                        }
+                    }
+
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return result;
+        }
+
+        public async Task<bool> ModifyUserData(UpdateUserModel user)
+        {
+            var result = false;
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("ModifyUserData", connection); // tárolt eljárás neve
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    if(user.Password != "")
+                    {
+                        var salt = DateTime.Now.ToString();
+                        var password = await HashPassword($"{user.Password}{salt}");
+                        cmd.Parameters.AddWithValue("@p_password", password);
+                        cmd.Parameters.AddWithValue("@p_salt", salt);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@p_password", "");
+                        cmd.Parameters.AddWithValue("@p_salt", "");
+                    }                  
+                    if (user.BirthDate == null)
+                    {
+                        cmd.Parameters.AddWithValue("@p_birthdate", "");
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@p_birthdate", user.BirthDate.ToString());
+                    }
+                    cmd.Parameters.AddWithValue("@p_profile_picture", user.ProfilePicture);
+                    cmd.Parameters.AddWithValue("@p_first_name", user.Firstname);
+                    cmd.Parameters.AddWithValue("@p_last_name", user.Lastname);
+                    cmd.Parameters.AddWithValue("@p_user_id", user.UserId);
+
+
+
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            result = true;
+                        }
+                    }
+
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return result;
+        }
+
         public async Task<UserModel> Login(string email)
         {
             var result = new UserModel();
@@ -94,7 +198,6 @@ namespace fakeface_be.Services.User
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Environment.Exit(1);
             }
 
             return result;
@@ -159,29 +262,30 @@ namespace fakeface_be.Services.User
         }
 
 
-        async Task<List<UserModel>> IUserRepository.GetAllUsers()
+        public async Task<List<UserPersonModel>> GetAllUsers(int user_id)
         {
-            var result = new List<UserModel>();
+            var result = new List<UserPersonModel>();
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
 
-                    string sqlQuery = "SELECT * FROM users;";
+                    MySqlCommand cmd = new MySqlCommand("GetAllUsers", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_user_id", user_id);
 
-                    using (MySqlCommand command = new MySqlCommand(sqlQuery, connection))
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        using (MySqlDataReader reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                result.Add(new UserModel() {
+                            var user = new UserPersonModel();
+                            user.UserId = (int)reader["user_id"];
+                            user.Firstname = (string)reader["first_name"];
+                            user.Lastname = (string)reader["last_name"];
+                            user.ProfilePicture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? "" : reader.GetString(reader.GetOrdinal("profile_picture"));
 
-                                    UserId = (int)reader["user_id"]
-
-                                });
-                            }
+                            result.Add(user);
                         }
                     }
 
@@ -191,7 +295,6 @@ namespace fakeface_be.Services.User
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Environment.Exit(1);
             }
 
             return result;

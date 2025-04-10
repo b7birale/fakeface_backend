@@ -32,9 +32,11 @@ namespace fakeface_be.Services.Comment
                         while (reader.Read())
                         {
                             CommentModel c = new CommentModel();
+                            c.PostId = (int)reader["post_id"];
                             c.CommentId = (int)reader["comment_id"];
                             c.Content = (string)reader["content"];
                             c.UserId = (int)reader["user_id"];
+                            c.Date = (DateTime)reader["date"];
                             //date
                             result.Add(c);
                             //Console.WriteLine($"{reader["user_id"]}, {reader["email"]}, {reader["first_name"]}");
