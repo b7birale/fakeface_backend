@@ -13,6 +13,7 @@ using fakeface_be.Services.Friend;
 using fakeface_be.Services.Chatroom;
 using fakeface_be.Services.Message;
 using fakeface_be.Services.Comment;
+using fakeface_be.Services.People;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ var configuration = builder.Configuration;
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IFriendRepository, FriendRepository>();
+builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IChatroomRepository, ChatroomRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();

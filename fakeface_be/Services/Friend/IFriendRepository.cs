@@ -1,12 +1,14 @@
 ﻿using fakeface_be.Models.Post;
+using fakeface_be.Models.User;
 
 namespace fakeface_be.Services.Friend
 {
     public interface IFriendRepository
     {
-        Task<List<int>> GetFriendsByUserId(int user_id);
+        Task<List<int>> GetFriendsIdsByUserId(int user_id);
+        Task<List<UserFriendModel>> GetFriendsByUserId(int user_id);
 
-        Task<bool> SendFriendRequest(int user_id_sender, int user_id_reciever);
+        //Task<bool> AddFriend(int user_id_one, int user_id_two);
 
     }
 }

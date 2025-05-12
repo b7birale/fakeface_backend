@@ -25,16 +25,20 @@ namespace fakeface_be.Services.Message
 
                     MySqlCommand cmd = new MySqlCommand("GetMessagesByChatroomId", connection); // tárolt eljárás neve
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_room_id", chatroom_id); // param1 === adatbázisban lévő unpit név
+                    cmd.Parameters.AddWithValue("@p_chatroom_id", chatroom_id); // param1 === adatbázisban lévő unpit név
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             MessageModel m = new MessageModel();
+                            m.MessageId = (int)reader["message_id"];
                             m.ChatroomId = (int)reader["chatroom_id"];
+                            m.Content = (string)reader["content"];
+                            m.RecieverUserId = (int)reader["reciever_user_id"];
+                            m.SenderUserId = (int)reader["sender_user_id"];
+                            m.MessageDatetime = (DateTime)reader["message_datetime"];
                             result.Add(m);
-                            //Console.WriteLine($"{reader["user_id"]}, {reader["email"]}, {reader["first_name"]}");
                         }
                     }
 
@@ -50,7 +54,7 @@ namespace fakeface_be.Services.Message
             return result;
         }
 
-        public async Task<bool> SendMessage(int chatroom_id, string content)
+        public async Task<bool> SendMessage(MessageModel message)
         {
             bool result = false;
             try
@@ -58,11 +62,14 @@ namespace fakeface_be.Services.Message
                 using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
-
-                    MySqlCommand cmd = new MySqlCommand("SendMessage", connection); // tárolt eljárás neve
+                    
+                    MySqlCommand cmd = new MySqlCommand("SendMessage", connection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_room_id", chatroom_id); // param1 === adatbázisban lévő unpit név
-                    cmd.Parameters.AddWithValue("@p_content", content);
+                    cmd.Parameters.AddWithValue("@p_chatroom_id", message.ChatroomId);
+                    cmd.Parameters.AddWithValue("@p_content", message.Content);
+                    cmd.Parameters.AddWithValue("@p_sender_user_id", message.SenderUserId);
+                    cmd.Parameters.AddWithValue("@p_reciever_user_id", message.RecieverUserId);
+                    cmd.Parameters.AddWithValue("@p_message_datetime", message.MessageDatetime);
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {

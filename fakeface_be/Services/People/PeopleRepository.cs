@@ -1,108 +1,34 @@
-﻿
-using fakeface_be.Models.Chatroom;
+﻿using fakeface_be.Models.FriendRequest;
 using fakeface_be.Models.Post;
 using MySql.Data.MySqlClient;
 using System.Data;
-using System.Xml.Linq;
 
-namespace fakeface_be.Services.Chatroom
+namespace fakeface_be.Services.People
 {
-    public class ChatroomRepository : IChatroomRepository
+    public class PeopleRepository : IPeopleRepository
     {
         public readonly IConfiguration _configuration;
 
-        public ChatroomRepository(IConfiguration _configuration)
+        public PeopleRepository(IConfiguration _configuration)
         {
             this._configuration = _configuration;
         }
 
-        public async Task<List<ChatroomModel>> GetChatroomsByUserId(int user_id)
+        public async Task<bool> SendFriendRequest(int user_id_sender, int user_id_reciever)
         {
-            var result = new List<ChatroomModel>();
+            var result = false;
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
 
-                    MySqlCommand cmd = new MySqlCommand("GetChatroomsByUserId", connection);
+                    MySqlCommand cmd = new MySqlCommand("CreateRequest", connection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_user_id", user_id);
 
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            ChatroomModel c = new ChatroomModel();
-                            c.ChatroomId = (int)reader["chatroom_id"];
-                            c.Name = (string)reader["name"];
-                            c.UserIdOne = (int)reader["user_id_one"];
-                            c.UserIdTwo = (int)reader["user_id_two"];
-                            result.Add(c);
-                        }
-                    }
+                    cmd.Parameters.AddWithValue("@p_sender_user_id", user_id_sender);
+                    cmd.Parameters.AddWithValue("@p_reciever_user_id", user_id_reciever);
 
-
-                    connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError(ex.Message + "\n" + ex.Message);
-            }
-
-            return result;
-        }
-
-
-        public async Task<long> CreateChatroom(ChatroomModel chatroom)
-        {
-            long result = 0;
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
-                {
-                    connection.Open();
-
-                    MySqlCommand cmd = new MySqlCommand("CreateChatroom", connection); // tárolt eljárás neve
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_name", chatroom.Name);
-                    cmd.Parameters.AddWithValue("@p_user_id_one", chatroom.UserIdOne);
-                    cmd.Parameters.AddWithValue("@p_user_id_two", chatroom.UserIdTwo);
-
-
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            result = Convert.ToInt64(reader["chatroom_id"]);
-                        }
-                    }
-
-
-                    connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.TraceError(ex.Message + "\n" + ex.Message);
-            }
-
-            return result;
-        }
-
-        public async Task<bool> DeleteChatroom(int chatroom_id)
-        {
-            bool result = false;
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
-                {
-                    connection.Open();
-
-                    MySqlCommand cmd = new MySqlCommand("DeleteChatroom", connection); // tárolt eljárás neve
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_room_id", chatroom_id); // param1 === adatbázisban lévő unpit név
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -118,36 +44,34 @@ namespace fakeface_be.Services.Chatroom
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError(ex.Message + "\n" + ex.Message);
+                Console.WriteLine(ex.ToString());
             }
 
             return result;
         }
 
-        public async Task<ChatroomModel> GetChatroomByUserIds(ChatroomUserIdsModel user_ids)
+        
+        public async Task<bool> AcceptFriendRequest(FriendRequestModel friend_request)
         {
-            var result = new ChatroomModel();
+            var result = false;
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
                 {
                     connection.Open();
 
-                    MySqlCommand cmd = new MySqlCommand("GetChatroomByUserIds", connection);
+                    MySqlCommand cmd = new MySqlCommand("AcceptRequest", connection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_user_id_one", user_ids.UserIdOne);
-                    cmd.Parameters.AddWithValue("@p_user_id_two", user_ids.UserIdTwo);
+
+                    cmd.Parameters.AddWithValue("@p_user_id_sender", friend_request.SenderUserId);
+                    cmd.Parameters.AddWithValue("@p_user_id_reciever", friend_request.RecieverUserId);
+
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            ChatroomModel c = new ChatroomModel();
-                            c.ChatroomId = (int)reader["chatroom_id"];
-                            c.Name = (string)reader["name"];
-                            c.UserIdOne = (int)reader["user_id_one"];
-                            c.UserIdTwo = (int)reader["user_id_two"];
-                            result = c;
+                            result = true;
                         }
                     }
 
@@ -157,10 +81,89 @@ namespace fakeface_be.Services.Chatroom
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Trace.TraceError(ex.Message + "\n" + ex.Message);
+                Console.WriteLine(ex.ToString());
             }
 
             return result;
         }
+
+
+        public async Task<bool> RejectFriendRequest(FriendRequestModel friend_request)
+        {
+            var result = false;
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("RejectRequest", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@p_user_id_sender", friend_request.SenderUserId);
+                    cmd.Parameters.AddWithValue("@p_user_id_reciever", friend_request.RecieverUserId);
+
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            result = true;
+                        }
+                    }
+
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return result;
+        }
+        
+
+        public async Task<List<SendFriendRequestModel>> GetFriendRequests(int user_id)
+        {
+            var result = new List<SendFriendRequestModel>();
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(this._configuration.GetConnectionString("DefaultConnection")))
+                {
+                    connection.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("GetIncomingFriendRequests", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@p_user_id", user_id);
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            SendFriendRequestModel f = new SendFriendRequestModel();
+                            f.SenderUserId = (int)reader["sender_user_id"];
+                            f.RecieverUserId = (int)reader["reciever_user_id"];
+                            f.Firstname = (string)reader["first_name"];
+                            f.Lastname = (string)reader["last_name"];
+                            f.ProfilePicture = reader.IsDBNull("profile_picture") ? "" : (string)reader["profile_picture"];
+                            result.Add(f);
+                        }
+                    }
+
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            return result;
+        }
+
+        
     }
 }

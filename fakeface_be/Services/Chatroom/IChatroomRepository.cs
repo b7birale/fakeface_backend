@@ -5,8 +5,9 @@ namespace fakeface_be.Services.Chatroom
     public interface IChatroomRepository
     {
         Task<List<ChatroomModel>> GetChatroomsByUserId(int user_id);
+        Task<ChatroomModel> GetChatroomByUserIds(ChatroomUserIdsModel user_ids);
 
-        Task<bool> CreateChatroom(string name);
+        Task<long> CreateChatroom(ChatroomModel chatroom);
 
         Task<bool> DeleteChatroom(int chatroom_id);
 

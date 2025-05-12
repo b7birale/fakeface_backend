@@ -1,10 +1,9 @@
 ﻿namespace fakeface_be.Models.Chatroom
 {
-    public class ChatroomModel
+    public class ChatroomUserIdsModel
     {
-        public int ChatroomId { get; set; }
-        public string Name { get; set; }
         public int UserIdOne { get; set; }
         public int UserIdTwo { get; set; }
+
     }
 }

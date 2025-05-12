@@ -7,5 +7,6 @@
         public int RecieverUserId { get; set; }
         public int ChatroomId { get; set; }
         public string Content { get; set; }
+        public DateTime MessageDatetime { get; set; }
     }
 }

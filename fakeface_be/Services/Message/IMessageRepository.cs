@@ -7,7 +7,7 @@ namespace fakeface_be.Services.Message
     {
         Task<List<MessageModel>> GetMessagesByChatroomId(int chatroom_id);
 
-        Task<bool> SendMessage(int chatroom_id, string content); // paraméterben nem vagyok biztos
+        Task<bool> SendMessage(MessageModel message);
 
         Task<bool> DeleteMessage (int message_id); //nem feltétlen szükséges
     }
