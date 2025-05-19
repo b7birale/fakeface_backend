@@ -118,21 +118,18 @@ CREATE TABLE `friend_requests` (<br>
 ### Users
 #### GetAllUsers
 
-DELIMITER //<br><br>
-
+DELIMITER //<br>
 CREATE PROCEDURE GetAllUsers(<br>
     IN p_user_id INT<br>
 )<br>
 BEGIN<br>
     SELECT user_id, last_name, first_name, profile_picture FROM users<br>
     WHERE user_id <> p_user_id;<br>
-END //<br><br>
+END //<br>
 DELIMITER;<br>
 
----------------------------------------------------------------------------------------------
-
-DELIMITER //<br><br>
-
+#### ModifyUserData
+DELIMITER //<br>
 CREATE PROCEDURE ModifyUserData(<br>
     IN p_user_id INT,<br>
     IN p_password VARCHAR(1000),<br>
@@ -152,42 +149,31 @@ BEGIN<br>
 	profile_picture = CASE WHEN p_profile_picture <> '' THEN p_profile_picture ELSE profile_picture END,<br>
 	salt = CASE WHEN p_password <> '' THEN p_salt ELSE salt END<br>
     WHERE user_id = p_user_id;<br>
-END //<br><br>
-
+END //<br>
 DELIMITER ;<br>
 
----------------------------------------------------------------------------------------------
+#### GetUserToProfile
+DELIMITER //<br>
+CREATE PROCEDURE GetUserToProfile(IN user_id INT)<br>
+BEGIN<br>
+    SELECT user_id, email, birthdate, profile_picture, first_name, last_name FROM users WHERE users.user_id = user_id;<br>
+END //<br>
+DELIMITER;<br>
 
-DELIMITER //
+#### UploadProfilePicture
+DELIMITER //<br>
+CREATE PROCEDURE UploadProfilePicture (<br>
+    IN p_user_id INT,<br>
+    IN p_profile_picture_path VARCHAR(1000)<br>
+)<br>
+BEGIN<br>
+     UPDATE users<br>
+     SET profile_picture = p_profile_picture_path<br>
+     WHERE user_id = p_user_id;<br>
+END //<br>
+DELIMITER;<br>
 
-CREATE PROCEDURE GetUserToProfile(IN user_id INT)
-BEGIN
-    SELECT user_id, email, birthdate, profile_picture, first_name, last_name FROM users WHERE users.user_id = user_id;
-END //
-
-DELIMITER ;
-
----------------------------------------------------------------------------------------------
-
-profilkép feltöltés/módosítás
-
-DELIMITER $$
-
-CREATE PROCEDURE UploadProfilePicture (
-    IN p_user_id INT,
-    IN p_profile_picture_path VARCHAR(1000)
-)
-BEGIN
-     UPDATE users
-     SET profile_picture = p_profile_picture_path
-     WHERE user_id = p_user_id;
-    
-END $$
-
-DELIMITER ;
-
----------------------------------------------------------------------------------------------
-
+#### GetUserByName
 DELIMITER //
 
 CREATE PROCEDURE GetUserByName (
