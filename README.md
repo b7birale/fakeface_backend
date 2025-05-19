@@ -113,6 +113,128 @@ CREATE TABLE `friend_requests` (<br>
   CONSTRAINT `fk_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE<br>
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci<br>
 
+## Tárolt eljárások
+
+### Users
+#### GetAllUsers
+
+DELIMITER //<br><br>
+
+CREATE PROCEDURE GetAllUsers(<br>
+    IN p_user_id INT<br>
+)<br>
+BEGIN<br>
+    SELECT user_id, last_name, first_name, profile_picture FROM users<br>
+    WHERE user_id <> p_user_id;<br>
+END //<br><br>
+DELIMITER;<br>
+
+---------------------------------------------------------------------------------------------
+
+DELIMITER //<br><br>
+
+CREATE PROCEDURE ModifyUserData(<br>
+    IN p_user_id INT,<br>
+    IN p_password VARCHAR(1000),<br>
+    IN p_first_name VARCHAR(250),<br>
+    IN p_last_name VARCHAR(250),<br>
+    IN p_birthdate VARCHAR(100),<br>
+    IN p_profile_picture MEDIUMTEXT,<br>
+    IN p_salt VARCHAR(50)<br>
+)<br>
+BEGIN<br>
+    UPDATE users<br>
+    SET<br>
+	password = CASE WHEN p_password <> '' THEN p_password ELSE password END,<br>
+	first_name = CASE WHEN p_first_name <> '' THEN p_first_name ELSE first_name END,<br>
+	last_name = CASE WHEN p_last_name <> '' THEN p_last_name ELSE last_name END,<br>
+	birthdate = CASE WHEN p_birthdate <> '' THEN  STR_TO_DATE(TRIM(TRAILING '-' FROM REPLACE(REPLACE(p_birthdate, ' ', ''), '.', '-')), '%Y-%m-%d') ELSE birthdate END,<br>
+	profile_picture = CASE WHEN p_profile_picture <> '' THEN p_profile_picture ELSE profile_picture END,<br>
+	salt = CASE WHEN p_password <> '' THEN p_salt ELSE salt END<br>
+    WHERE user_id = p_user_id;<br>
+END //<br><br>
+
+DELIMITER ;<br>
+
+---------------------------------------------------------------------------------------------
+
+DELIMITER //
+
+CREATE PROCEDURE GetUserToProfile(IN user_id INT)
+BEGIN
+    SELECT user_id, email, birthdate, profile_picture, first_name, last_name FROM users WHERE users.user_id = user_id;
+END //
+
+DELIMITER ;
+
+---------------------------------------------------------------------------------------------
+
+profilkép feltöltés/módosítás
+
+DELIMITER $$
+
+CREATE PROCEDURE UploadProfilePicture (
+    IN p_user_id INT,
+    IN p_profile_picture_path VARCHAR(1000)
+)
+BEGIN
+     UPDATE users
+     SET profile_picture = p_profile_picture_path
+     WHERE user_id = p_user_id;
+    
+END $$
+
+DELIMITER ;
+
+---------------------------------------------------------------------------------------------
+
+DELIMITER //
+
+CREATE PROCEDURE GetUserByName (
+    IN first_name VARCHAR(250),
+    IN last_name VARCHAR(250)
+)
+BEGIN
+    SELECT user_id, birthdate, profile_picture, first_name, last_name 
+    FROM users
+    WHERE (first_name = first_name OR first_name IS NULL) AND (last_name = last_name OR last_name IS NULL);
+END //
+
+DELIMITER ;
+
+---------------------------------------------------------------------------------------------
+
+DELIMITER //
+
+CREATE PROCEDURE GetUserById(IN user_id INT)
+BEGIN
+    SELECT * FROM users WHERE users.user_id = user_id;
+END //
+
+DELIMITER ;
+
+---------------------------------------------------------------------------------------------
+
+DELIMITER //
+
+CREATE PROCEDURE SignUp(IN email VARCHAR(250), IN password VARCHAR(1000), IN salt VARCHAR(50), IN birthdate VARCHAR(50), IN profile_picture VARCHAR(1000), IN first_name VARCHAR(250), IN last_name VARCHAR(250), IN qr_code VARCHAR(1000))
+BEGIN
+    INSERT INTO users (email, password, salt, birthdate, profile_picture, first_name, last_name, qr_code) VALUES (email, password, salt, STR_TO_DATE(TRIM(TRAILING '-' FROM REPLACE(REPLACE(birthdate, ' ', ''), '.', '-')), '%Y-%m-%d'), profile_picture, first_name, last_name, qr_code);
+END //
+
+DELIMITER ;
+
+---------------------------------------------------------------------------------------------
+
+DELIMITER //
+
+CREATE PROCEDURE Login(IN email VARCHAR(250))
+BEGIN
+    SELECT user_id, first_name, last_name, birthdate, password, salt FROM users WHERE users.email LIKE email;
+END //
+
+DELIMITER;
+
 
 
 
