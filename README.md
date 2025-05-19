@@ -127,7 +127,7 @@ BEGIN<br>
     WHERE user_id <> p_user_id;<br>
 END //<br>
 DELIMITER;<br>
------
+
 #### ModifyUserData
 DELIMITER //<br>
 CREATE PROCEDURE ModifyUserData(<br>
@@ -151,7 +151,7 @@ BEGIN<br>
     WHERE user_id = p_user_id;<br>
 END //<br>
 DELIMITER ;<br>
------
+
 #### GetUserToProfile
 DELIMITER //<br>
 CREATE PROCEDURE GetUserToProfile(IN user_id INT)<br>
@@ -159,7 +159,7 @@ BEGIN<br>
     SELECT user_id, email, birthdate, profile_picture, first_name, last_name FROM users WHERE users.user_id = user_id;<br>
 END //<br>
 DELIMITER;<br>
------
+
 #### UploadProfilePicture
 DELIMITER //<br>
 CREATE PROCEDURE UploadProfilePicture (<br>
