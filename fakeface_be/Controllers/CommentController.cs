@@ -28,5 +28,14 @@ namespace fakeface_be.Controllers
 
         }
 
+        [HttpPost("AddComment")]
+        [Authorize]
+        public async Task<ActionResult<bool>> AddComment([FromBody] AddCommentModel dto)
+        {
+            var result = await this._commentRepository.AddComment(dto.PostId, dto.UserId, dto.Content);
+            return Ok(result);
+
+        }
+
     }
 }

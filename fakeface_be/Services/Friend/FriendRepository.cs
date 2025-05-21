@@ -24,9 +24,9 @@ namespace fakeface_be.Services.Friend
                 {
                     connection.Open();
 
-                    MySqlCommand cmd = new MySqlCommand("GetFriendsByUserId", connection); // tárolt eljárás neve
+                    MySqlCommand cmd = new MySqlCommand("GetFriendsIdsByUserId", connection);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@p_user_id", user_id); // param1 === adatbázisban lévő unpit név
+                    cmd.Parameters.AddWithValue("@p_user_id", user_id);
 
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {

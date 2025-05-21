@@ -14,7 +14,7 @@ namespace fakeface_be.Services.Post
             this._configuration = _configuration;
         }
 
-        public async Task<List<PostModel>> GetPostsByUserId(int user_id)
+        public async Task<List<PostModel>> GetPostsByUserId(int user_id) //halott kód
         {
             var result = new List<PostModel>();
             try
@@ -75,9 +75,9 @@ namespace fakeface_be.Services.Post
                             p.Firstname = (string)reader["first_name"];
                             p.Lastname = (string)reader["last_name"];
                             p.Date = (DateTime)reader["date"];
-                            p.Picture = (string)reader["picture"];
+                            p.Picture = reader.IsDBNull("picture") ? "" : (string)reader["picture"];
+                            p.ProfilePicture = reader.IsDBNull("profile_picture") ? "" : (string)reader["profile_picture"];
                             result.Add(p);
-                            //Console.WriteLine($"{reader["user_id"]}, {reader["email"]}, {reader["first_name"]}");
                         }
                     }
 

@@ -26,7 +26,7 @@ namespace fakeface_be.Controllers
         public async Task<ActionResult<List<int>>> GetFriendsIdsByUserId([FromQuery] string userId)
         {
             int.TryParse(userId, out int id);
-            var result = await this._friendRepository.GetFriendsByUserId(id);
+            var result = await this._friendRepository.GetFriendsIdsByUserId(id);
             return Ok(result);
 
         }

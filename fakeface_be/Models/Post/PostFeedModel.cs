@@ -5,6 +5,7 @@
         public int PostId { get; set; }
         public int UserId { get; set; }
         public string? Picture { get; set; }
+        public string? ProfilePicture { get; set; }
 
         public string Content { get; set; }
         public DateTime Date { get; set; }

@@ -38,6 +38,7 @@ namespace fakeface_be.Services.Chatroom
                             c.Name = (string)reader["name"];
                             c.UserIdOne = (int)reader["user_id_one"];
                             c.UserIdTwo = (int)reader["user_id_two"];
+                            c.ProfilePicture = reader.IsDBNull("profile_picture") ? "" : (string)reader["profile_picture"];
                             result.Add(c);
                         }
                     }

@@ -4,11 +4,9 @@ namespace fakeface_be.Services.Comment
 {
     public interface ICommentRepository
     {
-        Task<List<CommentModel>> GetCommentsByPostId(int post_id);
+        Task<List<CommentFeedModel>> GetCommentsByPostId(int post_id);
 
-        Task<bool> AddComment(int post_id);
-
-        Task<bool> DeleteComment(int comment_id);
+        Task<bool> AddComment(int post_id, int user_id, string content);
 
     }
 }

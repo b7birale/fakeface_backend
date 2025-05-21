@@ -1,13 +1,8 @@
-﻿using fakeface_be.Models.LoginUser;
-using fakeface_be.Models.Post;
-using fakeface_be.Models.User;
+﻿using fakeface_be.Models.Post;
 using fakeface_be.Services.Post;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+
 
 namespace fakeface_be.Controllers
 {

@@ -8,7 +8,5 @@ namespace fakeface_be.Services.Friend
         Task<List<int>> GetFriendsIdsByUserId(int user_id);
         Task<List<UserFriendModel>> GetFriendsByUserId(int user_id);
 
-        //Task<bool> AddFriend(int user_id_one, int user_id_two);
-
     }
 }
