@@ -232,6 +232,76 @@ END //<br>
 
 DELIMITER;<br>
 
+### Posts
+
+#### CreatePost
+DELIMITER //<br>
+
+CREATE PROCEDURE CreatePost (<br>
+    IN p_picture mediumtext,<br>
+    IN p_content varchar(1000),<br>
+    IN p_user_id INT,<br>
+    IN p_title varchar(500)<br>
+)<br>
+BEGIN<br>
+    INSERT INTO posts (picture, content, date, user_id, title)<br>
+    VALUES (p_picture, p_content, NOW(), p_user_id, p_title);<br>
+END //<br>
+
+DELIMITER ;<br>
+
+
+#### DeletePost
+DELIMITER //<br>
+
+CREATE PROCEDURE DeletePost (<br>
+    IN p_post_id INT<br>
+)<br>
+BEGIN<br>
+    DELETE FROM posts<br>
+    WHERE post_id = p_post_id;<br>
+END //<br>
+
+DELIMITER ;<br>
+
+
+#### GetPostsByUserIds
+DELIMITER //<br>
+CREATE PROCEDURE GetPostsByUserIds (<br>
+    IN p_user_ids VARCHAR(1000)<br>
+)<br>
+BEGIN<br>
+    set @userids = p_user_ids;<br>
+    DROP TEMPORARY TABLE IF EXISTS TempUserIds;<br>
+
+    CREATE TEMPORARY TABLE TempUserIds (user_id VARCHAR(1000));<br>
+
+    INSERT INTO TempUserIds (user_id)<br>
+    SELECT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(@userids, ',', numbers.n), ',', -1)) AS user_id<br>
+    FROM (<br>
+        SELECT ROW_NUMBER() OVER () AS n<br>
+        FROM information_schema.columns<br>
+    ) numbers<br>
+
+    WHERE numbers.n <= 1 + CHAR_LENGTH(@userids) - CHAR_LENGTH(REPLACE(@userids, ',', ''))<br>
+    AND TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(@userids, ',', numbers.n), ',', -1)) <> '';<br>
+
+    SELECT p.*, u.first_name, u.last_name, u.profile_picture FROM posts AS p<br>
+    INNER JOIN users AS u ON p.user_id = u.user_id<br>
+    WHERE p.user_id IN (SELECT user_id FROM TempUserIds)<br>
+    ORDER BY p.date DESC;<br>
+
+END //<br>
+
+DELIMITER ;<br>
+
+
+
+
+
+
+
+
 
 
 
