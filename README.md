@@ -617,22 +617,6 @@ END //
 DELIMITER ;
 
 
-
-DELIMITER //
-
-CREATE PROCEDURE GetFriendsByUserId (
-    IN p_user_id INT
-)
-BEGIN
-    
-    SELECT * FROM friend_relations WHERE p_user_id = friend_relations.user_id_one OR p_user_id = friend_relations.user_id_two;
-
-END //
-
-DELIMITER ;
-
-
-
 DELIMITER //
 
 CREATE PROCEDURE CreateRelation (
