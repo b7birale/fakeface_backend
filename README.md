@@ -841,3 +841,68 @@ ADD CONSTRAINT fk_chatroom FOREIGN KEY (chatroom_id) REFERENCES chatrooms(chatro
 ADD CONSTRAINT fk_message_sender FOREIGN KEY (sender_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 ADD CONSTRAINT fk_message_reciever FOREIGN KEY (reciever_user_id) REFERENCES users(user_id) ON DELETE CASCADE;
 ```
+
+## Példa rekordok (INSERT INTOs)
+
+### Users
+```sql
+INSERT INTO users (email, password, birthdate, profile_picture, first_name, last_name, qr_code, salt) 
+VALUES 
+('john.doe@example.com', 'hashed_password_123', '1990-05-15', 'profile1.jpg', 'John', 'Doe', 'qr123456', 'salt1'),
+('jane.smith@example.com', 'hashed_password_456', '1985-08-22', 'profile2.jpg', 'Jane', 'Smith', 'qr789012', 'salt2'),
+('mike.johnson@example.com', 'hashed_password_789', '1995-03-10', NULL, 'Mike', 'Johnson', NULL, 'salt3');
+```
+
+### Posts
+```sql
+INSERT INTO posts (picture, content, date, user_id, title)
+VALUES
+('post1.jpg', 'Enjoying a beautiful day at the beach!', '2023-06-10 14:30:00', 1, 'Beach Day'),
+('post2.jpg', 'Just finished this amazing book!', '2023-06-12 09:15:00', 2, 'Book Recommendation'),
+(NULL, 'Working on a new project, excited to share soon!', '2023-06-15 18:45:00', 3, 'New Project');
+```
+
+### Comments
+```sql
+INSERT INTO comments (date, user_id, post_id, content)
+VALUES
+('2023-06-10 15:05:00', 2, 1, 'Looks amazing! Which beach is this?'),
+('2023-06-10 15:30:00', 3, 1, 'Wish I was there!'),
+('2023-06-12 10:00:00', 1, 2, 'What book is this? I need recommendations!');
+```
+
+### Friend requests
+```sql
+INSERT INTO friend_requests (accepted, rejected, sender_user_id, reciever_user_id)
+VALUES
+(1, 0, 1, 2),  -- Accepted request
+(0, 1, 3, 1),  -- Rejected request
+(0, 0, 2, 3);  -- Pending request
+```
+
+### Friend relations
+```sql
+INSERT INTO friend_relations (user_id_one, user_id_two)
+VALUES
+(1, 2),  -- John and Jane are friends
+(1, 3);  -- John and Mike are friends
+```
+
+### Chatrooms
+```sql
+INSERT INTO chatrooms (name, user_id_one, user_id_two)
+VALUES
+('John & Jane', 1, 2),
+('Work Group', 1, 3),
+('Project Team', 2, 3);
+```
+
+### Messages
+```sql
+INSERT INTO messages (content, chatroom_id, sender_user_id, reciever_user_id, message_datetime)
+VALUES
+('Hey Jane, how are you?', 1, 1, 2, '2023-06-10 10:00:00'),
+('Hi John! I''m good, thanks!', 1, 2, 1, '2023-06-10 10:02:00'),
+('Mike, about that project deadline...', 2, 1, 3, '2023-06-11 15:30:00'),
+('I''ll send you the files soon', 3, 2, 3, '2023-06-12 11:45:00');
+```
