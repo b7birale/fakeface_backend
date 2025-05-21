@@ -174,52 +174,63 @@ END //<br>
 DELIMITER;<br>
 
 #### GetUserByName
-DELIMITER //
+DELIMITER //<br>
 
-CREATE PROCEDURE GetUserByName (
-    IN first_name VARCHAR(250),
-    IN last_name VARCHAR(250)
-)
-BEGIN
-    SELECT user_id, birthdate, profile_picture, first_name, last_name 
-    FROM users
-    WHERE (first_name = first_name OR first_name IS NULL) AND (last_name = last_name OR last_name IS NULL);
-END //
+CREATE PROCEDURE GetUserByName (<br>
+    IN first_name VARCHAR(250),<br>
+    IN last_name VARCHAR(250)<br>
+)<br>
+BEGIN<br>
+    SELECT user_id, birthdate, profile_picture, first_name, last_name <br>
+    FROM users<br>
+    WHERE (first_name = first_name OR first_name IS NULL) AND (last_name = last_name OR last_name IS NULL);<br>
+END //<br>
 
-DELIMITER ;
+DELIMITER ;<br>
 
----------------------------------------------------------------------------------------------
 
-DELIMITER //
+#### GetUserById
+DELIMITER //<br>
 
-CREATE PROCEDURE GetUserById(IN user_id INT)
-BEGIN
-    SELECT * FROM users WHERE users.user_id = user_id;
-END //
+CREATE PROCEDURE GetUserById(IN user_id INT)<br>
+BEGIN<br>
+    SELECT * FROM users WHERE users.user_id = user_id;<br>
+END //<br>
 
-DELIMITER ;
+DELIMITER ;<br>
 
----------------------------------------------------------------------------------------------
 
-DELIMITER //
+#### SignUp
+DELIMITER //<br>
 
-CREATE PROCEDURE SignUp(IN email VARCHAR(250), IN password VARCHAR(1000), IN salt VARCHAR(50), IN birthdate VARCHAR(50), IN profile_picture VARCHAR(1000), IN first_name VARCHAR(250), IN last_name VARCHAR(250), IN qr_code VARCHAR(1000))
-BEGIN
-    INSERT INTO users (email, password, salt, birthdate, profile_picture, first_name, last_name, qr_code) VALUES (email, password, salt, STR_TO_DATE(TRIM(TRAILING '-' FROM REPLACE(REPLACE(birthdate, ' ', ''), '.', '-')), '%Y-%m-%d'), profile_picture, first_name, last_name, qr_code);
-END //
+CREATE PROCEDURE SignUp(<br>
+	IN email VARCHAR(250),<br>
+ 	IN password VARCHAR(1000),<br>
+  	IN salt VARCHAR(50),<br>
+   	IN birthdate VARCHAR(50),<br>
+    	IN profile_picture VARCHAR(1000),<br>
+     	IN first_name VARCHAR(250),<br>
+      	IN last_name VARCHAR(250),<br>
+       	IN qr_code VARCHAR(1000)<br>
+)<br>
+BEGIN<br>
+    INSERT INTO users (email, password, salt, birthdate, profile_picture, first_name, last_name, qr_code)<br>
+    VALUES (email, password, salt, STR_TO_DATE(TRIM(TRAILING '-' FROM REPLACE(REPLACE(birthdate, ' ', ''), '.', '-')), '%Y-%m-%d'), profile_picture, first_name, last_name, qr_code);<br>
+END //<br>
 
-DELIMITER ;
+DELIMITER ;<br>
 
----------------------------------------------------------------------------------------------
 
-DELIMITER //
+#### Login
+DELIMITER //<br>
 
-CREATE PROCEDURE Login(IN email VARCHAR(250))
-BEGIN
-    SELECT user_id, first_name, last_name, birthdate, password, salt FROM users WHERE users.email LIKE email;
-END //
+CREATE PROCEDURE Login(IN email VARCHAR(250))<br>
+BEGIN<br>
+    SELECT user_id, first_name, last_name, birthdate, password, salt FROM users <br>
+    WHERE users.email LIKE email;<br>
+END //<br>
 
-DELIMITER;
+DELIMITER;<br>
 
 
 
