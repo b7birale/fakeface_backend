@@ -137,27 +137,33 @@ CREATE TABLE `messages` (
 
 ### Users
 
-| user_id | int | NO | PRI | NULL | auto_increment |
-| email | varchar(250) | NO | | NULL | |
-| password | varchar(1000) | NO | | NULL | |
-| birthdate | date | NO | | NULL | |
-| profile_picture | mediumtext | YES | | NULL | |
-| first_name | varchar(250) | NO | | NULL | |
-| last_name | varchar(250) | NO | | NULL | |
-| qr_code | varchar(1000) | YES | | NULL | |
-| salt | varchar(50) | YES | | NULL | |
+| Column          | Type          | Null | Key | Default | Extra          |
+|-----------------|---------------|------|-----|---------|----------------|
+| user_id         | int           | NO   | PRI | NULL    | auto_increment |
+| email           | varchar(250)  | NO   |     | NULL    |                |
+| password        | varchar(1000) | NO   |     | NULL    |                |
+| birthdate       | date          | NO   |     | NULL    |                |
+| profile_picture | mediumtext    | YES  |     | NULL    |                |
+| first_name      | varchar(250)  | NO   |     | NULL    |                |
+| last_name       | varchar(250)  | NO   |     | NULL    |                |
+| qr_code         | varchar(1000) | YES  |     | NULL    |                |
+| salt            | varchar(50)   | YES  |     | NULL    |                |
 
 ### Posts
 
-| post_id | int           | NO   | PRI | NULL    | auto_increment |
-| picture | mediumtext    | YES  |     | NULL    |                |
-| content | varchar(1000) | NO   |     | NULL    |                |
-| date    | datetime      | NO   |     | NULL    |                |
-| user_id | int           | NO   | MUL | NULL    |                |
-| title   | varchar(500)  | NO   |     | NULL    |                | 
+| Column   | Type          | Null | Key | Default | Extra          |
+|----------|---------------|------|-----|---------|----------------|
+| post_id  | int           | NO   | PRI | NULL    | auto_increment |
+| picture  | mediumtext    | YES  |     | NULL    |                |
+| content  | varchar(1000) | NO   |     | NULL    |                |
+| date     | datetime      | NO   |     | NULL    |                |
+| user_id  | int           | NO   | MUL | NULL    |                |
+| title    | varchar(500)  | NO   |     | NULL    |                |
 
 ### Comments
 
+| Column     | Type          | Null | Key | Default | Extra          |
+|------------|---------------|------|-----|---------|----------------|
 | comment_id | int           | NO   | PRI | NULL    | auto_increment |
 | date       | datetime      | NO   |     | NULL    |                |
 | user_id    | int           | NO   | MUL | NULL    |                |
@@ -166,6 +172,8 @@ CREATE TABLE `messages` (
 
 ### Friend Requests
 
+| Column           | Type       | Null | Key | Default | Extra          |
+|------------------|------------|------|-----|---------|----------------|
 | request_id       | int        | NO   | PRI | NULL    | auto_increment |
 | accepted         | tinyint(1) | NO   |     | NULL    |                |
 | rejected         | tinyint(1) | NO   |     | NULL    |                |
@@ -174,19 +182,25 @@ CREATE TABLE `messages` (
 
 ### Friend Relations
 
-| relation_id | int  | NO   | PRI | NULL    | auto_increment |
-| user_id_one | int  | NO   | MUL | NULL    |                |
-| user_id_two | int  | NO   | MUL | NULL    |                |
+| Column       | Type | Null | Key | Default | Extra          |
+|--------------|------|------|-----|---------|----------------|
+| relation_id  | int  | NO   | PRI | NULL    | auto_increment |
+| user_id_one  | int  | NO   | MUL | NULL    |                |
+| user_id_two  | int  | NO   | MUL | NULL    |                |
 
 ### Chatrooms
 
-| chatroom_id | int          | NO   | PRI | NULL    | auto_increment |
-| name        | varchar(100) | NO   |     | NULL    |                |
-| user_id_one | int          | YES  | MUL | NULL    |                |
-| user_id_two | int          | YES  |     | NULL    |                |
+| Column       | Type          | Null | Key | Default | Extra          |
+|--------------|---------------|------|-----|---------|----------------|
+| chatroom_id  | int           | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(100)  | NO   |     | NULL    |                |
+| user_id_one  | int           | YES  | MUL | NULL    |                |
+| user_id_two  | int           | YES  |     | NULL    |                |
 
 ### Messages
 
+| Column           | Type          | Null | Key | Default | Extra          |
+|------------------|---------------|------|-----|---------|----------------|
 | message_id       | int           | NO   | PRI | NULL    | auto_increment |
 | content          | varchar(1000) | NO   |     | NULL    |                |
 | chatroom_id      | int           | NO   | MUL | NULL    |                |
